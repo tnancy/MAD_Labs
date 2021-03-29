@@ -1,0 +1,129 @@
+package com.example.musicplayer;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    ImageView playpause,next,prev,mImageView;
+    TextView songTitle;
+    int currentIndex =0;
+    static MediaPlayer mMediaPlayer;
+    private AudioManager mAudioManager;
+
+    final ArrayList<Integer> songs = new ArrayList<>();
+    final ArrayList<Integer> images = new ArrayList<>();
+
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mImageView = findViewById(R.id.imageView);
+        playpause = findViewById(R.id.playpause);
+
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        songs.add(0,R.raw.numb);
+        songs.add(1,R.raw.aluvapuzha);
+        images.add(0,R.drawable.numb);
+        images.add(1,R.drawable.premam);
+        mMediaPlayer = MediaPlayer.create(getApplicationContext(),songs.get(currentIndex));
+    }
+
+
+    public void musicprev(View view) {
+
+        if(mMediaPlayer!=null){
+            playpause.setImageResource(R.drawable.ic_baseline_pause_24);
+        }
+
+        if(currentIndex >0){
+            currentIndex--;
+        }else   {
+            currentIndex =songs.size()-1;
+        }
+
+        if(mMediaPlayer.isPlaying()){
+            mMediaPlayer.stop();
+        }
+        mMediaPlayer = MediaPlayer.create(getApplicationContext(),songs.get(currentIndex));
+        mImageView.setImageResource(images.get(currentIndex));
+        mMediaPlayer.start();
+//        songDetails();
+
+
+
+    }
+
+    public void musicplaypause(View view) {
+
+        if(mMediaPlayer !=null  && mMediaPlayer.isPlaying()){
+            mMediaPlayer.pause();
+            playpause.setImageResource(R.drawable.play);
+        }
+        else{
+            mMediaPlayer.start();
+            mImageView.setImageResource(images.get(currentIndex));
+            playpause.setImageResource(R.drawable.ic_baseline_pause_24);
+        }
+
+//        songDetails();
+
+    }
+
+    public void musicnext(View view) {
+
+
+        if(mMediaPlayer!=null){
+            playpause.setImageResource(R.drawable.ic_baseline_pause_24);
+        }
+
+        if(currentIndex< songs.size() -1){
+            currentIndex++;
+        }else   {
+            currentIndex =0;
+        }
+
+        if(mMediaPlayer.isPlaying()){
+            mMediaPlayer.stop();
+        }
+        mMediaPlayer = MediaPlayer.create(getApplicationContext(),songs.get(currentIndex));
+        mMediaPlayer.start();
+        mImageView.setImageResource(images.get(currentIndex));
+
+    }
+
+    private void songDetails() {
+
+        if(currentIndex==0){
+            songTitle.setText("Title");
+//            mImageView.setImageResource();
+        }
+
+        if(currentIndex==1){
+            songTitle.setText("Title1");
+//            mImageView.setImageResource();
+        }
+
+        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mMediaPlayer.start();
+            }
+        });
+
+    }
+}
+
+
+
